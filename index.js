@@ -65,6 +65,22 @@ async function run() {
         res.send(result)
     })
 
+    // put for update task
+    app.put('/all_Tasks/:id', async (req,res) => {
+        console.log(req.params.id)
+        const {id} = req.params;
+        const updateData = req.body;
+        const filter = {_id : new ObjectId(id)};
+        const options = { upsert: true };
+        const updateDoc = {
+            $set:updateData
+        }
+        const result = await taskCollection.updateOne(filter,updateDoc,options)
+        res.send(result)
+    })
+
+    
+
   } finally {
     // await client.close();
   }
