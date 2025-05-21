@@ -56,6 +56,15 @@ async function run() {
         const result = await taskCollection.findOne(filter);
         res.send(result)
     })
+
+    // filter email get data 
+    app.get('/email_filter', async (req,res) => {
+        const email = req.query.email;
+        const filter = {email : email}
+        const result = await taskCollection.find(filter).toArray();
+        res.send(result)
+    })
+
   } finally {
     // await client.close();
   }
