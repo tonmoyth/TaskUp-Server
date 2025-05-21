@@ -33,15 +33,21 @@ async function run() {
       res.send(result);
     });
 
-    // find all tasks
+    // find six tasks
     app.get("/tasks", async (req, res) => {
       const result = await taskCollection
         .find({})
-        .sort({ date: -1 })
+        .sort({ date: 1 })
         .limit(6)
         .toArray();
       res.send(result);
     });
+
+    // find add tasks
+    app.get('/all_Tasks', async (req,res) => {
+        const result = await taskCollection.find().toArray();
+        res.send(result);
+    })
   } finally {
     // await client.close();
   }
