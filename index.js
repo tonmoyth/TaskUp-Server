@@ -79,7 +79,13 @@ async function run() {
         res.send(result)
     })
 
-    
+    // delete Task
+    app.delete('/all_Tasks/:id', async (req,res) => {
+        const {id} = req.params;
+        const query = {_id : new ObjectId(id)};
+        const result = await taskCollection.deleteOne(query);
+        res.send(result)
+    })
 
   } finally {
     // await client.close();
