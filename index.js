@@ -86,6 +86,20 @@ async function run() {
         const result = await taskCollection.deleteOne(query);
         res.send(result)
     })
+    
+    // patch api 
+    app.patch('/all_Tasks/:id', async (req,res) => {
+      const {id} = req.params;
+      const filter = {_id : new ObjectId(id)};
+      const options = { upsert: true };
+      const updateDoc = {
+        $inc: {
+          Bids : 1
+        }
+      }
+      const result = await taskCollection.updateOne(filter,updateDoc,options)
+      res.send(result)
+    })
 
   } finally {
     // await client.close();
