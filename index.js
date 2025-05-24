@@ -1,7 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-require("dotenv").config();
 const port = process.env.PORT || 3000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
@@ -26,14 +26,14 @@ async function run() {
   try {
     const taskCollection = client.db("taskCollection").collection("tasks");
 
-    // insert task
+    // insert for task add 
     app.post("/tasks", async (req, res) => {
       const tasks = req.body;
       const result = await taskCollection.insertOne(tasks);
       res.send(result);
     });
 
-    // find six tasks
+    // find for six tasks
     app.get("/tasks", async (req, res) => {
       const result = await taskCollection
         .find({})
@@ -43,13 +43,13 @@ async function run() {
       res.send(result);
     });
 
-    // find add tasks
+    // find for all tasks
     app.get('/all_Tasks', async (req,res) => {
         const result = await taskCollection.find().toArray();
         res.send(result);
     })
 
-    // get single task
+    // get for single task
     app.get('/all_Tasks/:id', async (req,res) => {
         const {id} = req.params;
         const filter = {_id : new ObjectId(id)};
@@ -57,7 +57,7 @@ async function run() {
         res.send(result)
     })
 
-    // filter email get data 
+    // filter for email get data 
     app.get('/email_filter', async (req,res) => {
         const email = req.query.email;
         const filter = {email : email}
@@ -87,7 +87,7 @@ async function run() {
         res.send(result)
     })
     
-    // patch api 
+    // patch api for inc bids button 
     app.patch('/all_Tasks/:id', async (req,res) => {
       const {id} = req.params;
       const filter = {_id : new ObjectId(id)};
