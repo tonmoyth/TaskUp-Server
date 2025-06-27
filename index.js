@@ -38,66 +38,84 @@ async function run() {
       const result = await taskCollection
         .find({})
         .sort({ date: 1 })
-        .limit(6)
+        .limit(8)
         .toArray();
       res.send(result);
     });
 
     // find for all tasks
-    app.get('/all_Tasks', async (req,res) => {
-        const result = await taskCollection.find().toArray();
-        res.send(result);
+    app.get('/all_Tasks', async (req, res) => {
+      const result = await taskCollection.find().sort({ date: 1 }).toArray();
+      res.send(result);
+    })
+
+    app.get('/tasks_filter', async (req, res) => {
+      const { category } = req.query;
+      const filter = {};
+      if (category) {
+        filter.task = category;
+      }
+      console.log(filter)
+      const result = await taskCollection.find(filter).toArray();
+      res.send(result)
     })
 
     // get for single task
-    app.get('/all_Tasks/:id', async (req,res) => {
-        const {id} = req.params;
-        const filter = {_id : new ObjectId(id)};
-        const result = await taskCollection.findOne(filter);
-        res.send(result)
+    app.get('/all_Tasks/:id', async (req, res) => {
+      const { id } = req.params;
+      const filter = { _id: new ObjectId(id) };
+      const result = await taskCollection.findOne(filter);
+      res.send(result)
     })
 
     // filter for email get data 
-    app.get('/email_filter', async (req,res) => {
-        const email = req.query.email;
-        const filter = {email : email}
-        const result = await taskCollection.find(filter).toArray();
-        res.send(result)
+    app.get('/email_filter', async (req, res) => {
+      const email = req.query.email;
+      const filter = { email: email }
+      const result = await taskCollection.find(filter).toArray();
+      res.send(result)
     })
 
     // put for update task
-    app.put('/all_Tasks/:id', async (req,res) => {
-        console.log(req.params.id)
-        const {id} = req.params;
-        const updateData = req.body;
-        const filter = {_id : new ObjectId(id)};
-        const options = { upsert: true };
-        const updateDoc = {
-            $set:updateData
-        }
-        const result = await taskCollection.updateOne(filter,updateDoc,options)
-        res.send(result)
+    app.put('/all_Tasks/:id', async (req, res) => {
+      console.log(req.params.id)
+      const { id } = req.params;
+      const updateData = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: updateData
+      }
+      const result = await taskCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
     })
 
     // delete Task
-    app.delete('/all_Tasks/:id', async (req,res) => {
-        const {id} = req.params;
-        const query = {_id : new ObjectId(id)};
-        const result = await taskCollection.deleteOne(query);
-        res.send(result)
+    app.delete('/all_Tasks/:id', async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: new ObjectId(id) };
+      const result = await taskCollection.deleteOne(query);
+      res.send(result)
     })
-    
+
     // patch api for inc bids button 
-    app.patch('/all_Tasks/:id', async (req,res) => {
-      const {id} = req.params;
-      const filter = {_id : new ObjectId(id)};
+    app.patch('/all_Tasks/:id', async (req, res) => {
+      const { id } = req.params;
+      const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
         $inc: {
-          Bids : 1
+          Bids: 1
         }
       }
-      const result = await taskCollection.updateOne(filter,updateDoc,options)
+      const result = await taskCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
+
+    // total posted 
+    app.get('/totalPosted', async (req,res) => {
+      const {email} = req.query;
+      const result = await taskCollection.find({email: email}).toArray();
       res.send(result)
     })
 
